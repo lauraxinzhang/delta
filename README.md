@@ -43,6 +43,8 @@ Example:
         std::cout << t_coords[i].x_ << "," << t_coords[i].y_ << std::endl;
     }
 ```
+A makefile for GCC compilers is included. See delaunator repository
+for examples on how to compile with cmake.
 
 The copyright notice for delaunator-cpp is included in the src file 
 delaunator.hpp.

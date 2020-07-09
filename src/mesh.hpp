@@ -11,6 +11,8 @@
 #include "delaunator.hpp"
 #include "Containers.hpp"
 #include <cmath>
+#include <exception>
+
 
 struct MeshPoint
 {
@@ -89,6 +91,16 @@ public:
      *\param coords Set of coordinates for input points, as one vector {x1, y1, x2, y2, ...}
      */
     Mesh(VecDoub& coords, VecDoub& val);
+    
+    /**
+     *\brief Get number of coordinate pairs
+     */
+    size_t size();
+    
+    /**
+     *\brief Get the number of total triangles
+     */
+    size_t numTriag();
     
     /**
      *\brief  Find the half edges coresponding to the input triangle
@@ -187,6 +199,41 @@ private:
     VecDoub val_; //length is half of the length of coords; Value on each grid point
 };
 
+/**
+ *\brief Housekeeping. Allows for exiting without memory leaks
+ */
+struct ExitException : public std::exception {
+    int code_; ///< Exit code
+    ExitException(int code): code_(code) {} // trivial constructor
+    
+    const char * what () const throw () {
+        switch (code_){
+            case 0: std::cerr << std::endl;
+                exit(0); //normal exit
+            case 1:
+                std::cerr << "coordinates and function values dimension mismatch." << std::endl;
+                std::cerr << "Exiting." << std::endl;
+                exit(1);
+            case 2:
+                std::cerr << "No intersection found with current triangle." << std::endl;
+                std::cerr << "Exiting." << std::endl;
+                exit(2);
+            case 3:
+                std::cerr << "Search target point is outside domain. Exiting...";
+                std::cerr << std::endl;
+                exit(3);
+            case 4:
+                std::cerr << "Triangle index out of range." << std::endl;
+                std::cerr << "Called by Mesh::edgesOfTriag" << std::endl;
+                exit(4);
+            case 5:
+                std::cerr << "Edge index out of range." << std::endl;
+                std::cerr << "Called by Mesh::triagOfEdge" << std::endl;
+                exit(5);
+        }
+        return "Uncaught exceptions";
+   }
+};
 
 
 

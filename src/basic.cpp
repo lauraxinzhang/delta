@@ -4,11 +4,32 @@
 #include <string>
 #include <fstream>
 #include <iostream>
+#include <stdlib.h>
 
-#include "delaunator.hpp"
-#include "mesh.hpp"
-#include "Containers.hpp"
+//#include "delaunator.hpp"
+#include "Mesh.hpp"
+//#include "Containers.hpp"
 
+//-----------------------------------------------------------------
+//------------------------- Housekeeping --------------------------
+//-----------------------------------------------------------------
+
+/**
+ * \brief Prints how to use the program from command line then exits.
+ * \throws ExitException in order to exit the program.
+ */
+void usage()
+{
+    std::cerr << "Usage: ./Orbit [-t] [-e] [-g] [-h] [-dat] [-part] [-stat]" << std::endl
+                  << "See documentation or use [-h] option for details :)" <<  std::endl << "Exiting now." << std::endl;
+    try {
+        throw ExitException(0);
+    } catch (ExitException& e) {
+        std::cout << e.what() << std::endl;
+    }
+}
+
+//-------------- vector utilities -----------------------------
 std::vector<double> randArray(double min, double max, int num)
 {
     std::vector<double> out(num);
@@ -27,7 +48,6 @@ std::vector<double> randArray(double min, double max, int num)
     return out;
 }
 
-// Does this show up in original file??
 std::vector<double> linspace(double start, double end, int num)
 {
     std::vector<double> out(num);
@@ -54,26 +74,28 @@ std::vector<double> meshgrid(std::vector<double>& rr, std::vector<double>& zz)
     return out;
 }
 
-std::vector<double> read_limiter(std::string& filename)
-{
-    std::ifstream input;
-    input.open(filename);
-    std::vector<double> rtn;
-    
-    if (!input.is_open()){
-        std::cerr << "cannot open file" << std::endl;
-//        return rtn;
-    } else {
-        double in;
-        while (input >> in){
-            rtn.push_back(in);
-        }
-    }
-    input.close();
-    return rtn;
-}
+// remove this method for public release. for SOLFI only.
+//std::vector<double> read_limiter(std::string& filename)
+//{
+//    std::ifstream input;
+//    input.open(filename);
+//    std::vector<double> rtn;
+//
+//    if (!input.is_open()){
+//        std::cerr << "cannot open file" << std::endl;
+////        return rtn;
+//    } else {
+//        double in;
+//        while (input >> in){
+//            rtn.push_back(in);
+//        }
+//    }
+//    input.close();
+//    return rtn;
+//}
 
 int main() {
+
     /* x0, y0, x1, y1, ... */
      std::vector<double> coords = {-1, 1, 1, 1, 1, -1, -1, -1, 0, 0, -1, 0};
     
@@ -111,12 +133,15 @@ int main() {
     
     
     
-    VecDoub val = {0, 1, 2, 3};
+    VecDoub val = {0, 1, 2, 3, 4, 5};
     Mesh mesh(coords, val);
-    MeshPoint p(0.5, 0.8);
-    size_t start = 0;
-    std::vector<size_t> tout = mesh.search(p, start);
+    std::cout <<"size: " << mesh.size() << std::endl;
     
+    
+    MeshPoint p(1, -2);
+    size_t start = 1;
+    std::vector<size_t> tout = mesh.search(p, start);
+
     std::vector<MeshPoint> t_coords = mesh.coordsOfTriag(tout.back());
     std::cout << "Found in triangle " << tout.back() << std::endl;
     for (int i=0; i< t_coords.size(); i++){
@@ -129,4 +154,6 @@ int main() {
         fprintf(hist, "%i\n", tout[i]);
     }
     fclose(hist);
+    
+//    usage();
 }

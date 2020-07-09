@@ -6,7 +6,7 @@
 //
 
 #include <stdio.h>
-#include "mesh.hpp"
+#include "Mesh.hpp"
 
 LineSeg::LineSeg(MeshPoint& pa, MeshPoint& pb)
         :pa_(pa), pb_(pb) // using copy constructor
@@ -69,10 +69,38 @@ Mesh::Mesh(VecDoub& coords, VecDoub& val)
     :d_(coords), coords_(coords), val_(val)
 {
     // Delaunator is constructed in colon initialization
+    if (val_.size() != coords_.size() /2){
+        try {
+            throw ExitException(1);
+        } catch (ExitException& e) {
+            std::cerr << "Found " << val.size() << " values for ";
+            std::cerr << coords_.size() /2 << " pairs of coordinates." << std::endl;
+            std::cout << e.what() << std::endl;
+        }
+    }
+}
+
+size_t Mesh::size()
+{
+    return val_.size();
+}
+
+size_t Mesh::numTriag()
+{
+    return d_.triangles.size()/3;
 }
 
 std::vector<size_t> Mesh::edgesOfTriag(size_t t)
 {
+    try {
+        if (t > d_.triangles.size()){
+            
+            std::cout << t << " huh>>>" << std::endl;
+            throw ExitException(4);
+        }
+    } catch (ExitException& e) {
+        e.what();
+    }
     t = t - (t % 3); // make sure we're at the beginning of the triangle
     std::vector<size_t> out {t, t +1, t + 2};
     return out;
@@ -85,7 +113,7 @@ std::vector<size_t> Mesh::pointsOfTriag(size_t t)
     std::vector<size_t> edges = edgesOfTriag(t);
     for (int i = 0; i < 3; i++){
 //        size_t coord_id = d_.triangles[t + i];
-        size_t coord_id = d_.triangles[edges[i]];
+        size_t coord_id = d_.triangles.at(edges[i]); // safe retrieval
         out[2 * i]     = 2 * coord_id;     // x coordinate
         out[2 * i + 1] = 2 * coord_id + 1; // y coordinate
     }
@@ -94,6 +122,13 @@ std::vector<size_t> Mesh::pointsOfTriag(size_t t)
 
 size_t Mesh::triagOfEdge(size_t e)
 {
+    try {
+        if (e >= d_.triangles.size()){
+            throw ExitException(5);
+        }
+    } catch (ExitException& e) {
+        e.what();
+    }
     return e - (e % 3);
 //    return floor(e/3);
 }
@@ -105,8 +140,8 @@ std::vector<MeshPoint> Mesh::coordsOfTriag(size_t t)
     t = t - (t % 3); // go back to the beginning of the triangle
     std::vector<size_t> indices = pointsOfTriag(t);
     for (int i = 0; i < 3; i++){
-        out[i].x_ = d_.coords[indices[ 2 * i]];
-        out[i].y_ = d_.coords[indices[ 2 * i + 1]];
+        out[i].x_ = d_.coords.at(indices[ 2 * i]);
+        out[i].y_ = d_.coords.at(indices[ 2 * i + 1]);
     }
     return out;
 }
@@ -114,21 +149,21 @@ std::vector<MeshPoint> Mesh::coordsOfTriag(size_t t)
 LineSeg Mesh::edgeToLineSeg(size_t e)
 {
     size_t start = d_.triangles[e];
-    double a_x = d_.coords[2 * start];
-    double a_y = d_.coords[2 * start + 1];
+    double a_x = d_.coords.at(2 * start);
+    double a_y = d_.coords.at(2 * start + 1);
     
-    size_t end = d_.halfedges[e];
+    size_t end = d_.halfedges.at(e);
     size_t coord_id;
 //    size_t end;
     if (end == delaunator::INVALID_INDEX){ // there's no opposite triangle
         // look for the start of next half edge
-        coord_id = d_.triangles[(e % 3 == 2) ? e - 2 : e + 1];
+        coord_id = d_.triangles.at((e % 3 == 2) ? e - 2 : e + 1);
     }
     else {
-        coord_id = d_.triangles[end];
+        coord_id = d_.triangles.at(end);
     }
-    double b_x = d_.coords[2 * coord_id];
-    double b_y = d_.coords[2 * coord_id + 1];
+    double b_x = d_.coords.at(2 * coord_id);
+    double b_y = d_.coords.at(2 * coord_id + 1);
     
     MeshPoint pa(a_x, a_y);
     MeshPoint pb(b_x, b_y);
@@ -138,7 +173,7 @@ LineSeg Mesh::edgeToLineSeg(size_t e)
 
 size_t Mesh::neighborTriag(size_t e)
 {
-    size_t opposite = d_.halfedges[e];
+    size_t opposite = d_.halfedges.at(e);
     size_t triag;
     if (opposite != -1){
         triag = triagOfEdge(opposite);
@@ -204,7 +239,7 @@ std::vector<size_t> Mesh::search(MeshPoint p, size_t init)
     rtn.push_back(t_now);
 //    size_t t_next;
     while (!isInTriag(p, t_now)){
-//        std::cout << t_now << std::endl;
+        std::cout << t_now << std::endl;
         size_t t_next = walk(p, t_now);
         t_now = t_next;
         rtn.push_back(t_now);
@@ -215,8 +250,8 @@ std::vector<size_t> Mesh::search(MeshPoint p, size_t init)
 size_t Mesh::walk(MeshPoint p, size_t t_now)
 {
     std::vector<size_t> edges_head = edgesOfTriag(t_now);
-//    edges_head.push_back(edges_head[0]);
-    size_t intersection(100); // an invalid result
+    
+    size_t intersection(delaunator::INVALID_INDEX); // an invalid result to initialize
     for (int i=0; i< edges_head.size(); i++){
         size_t e = edges_head[i];
         LineSeg edge = edgeToLineSeg(e);
@@ -226,11 +261,25 @@ size_t Mesh::walk(MeshPoint p, size_t t_now)
             intersection = e;
         }
     }
-    assert(intersection != 100);
-    size_t e_opposite = d_.halfedges[intersection];
-    assert(e_opposite != delaunator::INVALID_INDEX); // otherwise the query point is outside of domain
-    size_t t_next = triagOfEdge(e_opposite);
-    return t_next;
+    try {
+        if (intersection == delaunator::INVALID_INDEX){
+            // no intersection found
+            throw ExitException(2);
+        }
+        size_t e_opposite = d_.halfedges[intersection];
+        if (e_opposite == delaunator::INVALID_INDEX){
+            // point is outside domain
+            throw ExitException(3);
+        }
+        size_t t_next = triagOfEdge(e_opposite);
+        // program success
+        return t_next;
+        
+    } catch (ExitException& e) {
+        std::cerr << e.what() << std::endl;
+    }
+    // function should terminate before it gets here
+    return delaunator::INVALID_INDEX;
 }
 
 double Mesh::interp(MeshPoint p, size_t init)
