@@ -43,8 +43,21 @@ Example:
         std::cout << t_coords[i].x_ << "," << t_coords[i].y_ << std::endl;
     }
 ```
+Also included is a python file for visualizing the triangulation and search path. Simply
+run:
+``` 
+python show.py
+```
+to see results. Figures also saved as pdf files.
+
 A makefile for GCC compilers is included. See delaunator repository
 for examples on how to compile with cmake.
+
+You can run
+```
+doxygen delta.config
+```
+to generate documentations.
 
 The copyright notice for delaunator-cpp is included in the src file 
 delaunator.hpp.

@@ -26,13 +26,6 @@ struct MeshPoint
     
     inline MeshPoint(const MeshPoint& p): x_(p.x_), y_(p.y_) {}
     
-//    inline MeshPoint& operator=(MeshPoint p)
-//    {
-//        x_ = p.x_;
-//        y_ = p.y_;
-//        return *this;
-//    }
-    
     inline bool operator==(MeshPoint& p)
     {
         return p.x_ == x_ && p.y_ == y_;
@@ -90,6 +83,8 @@ public:
     /**
      *\brief Constructor for Mesh class. Constructs the triangulation from input coordinates
      *\param coords Set of coordinates for input points, as one vector {x1, y1, x2, y2, ...}
+     *\param val Function value to be interpolated.
+     *\note The size of the val vector is required to be half of that of coords
      */
     Mesh(VecDoub& coords, VecDoub& val);
     
@@ -194,6 +189,10 @@ public:
      */
     double interp(MeshPoint p, size_t init);
     
+    /**
+     * \brief print the coordiantes of the triangles to file
+     * \param fname name of file to output to
+     */
     void printTriag(const char* fname);
     
 private:
