@@ -82,7 +82,7 @@ int main() {
     std::cout <<"size of mesh: " << mesh.size() << std::endl;
     
     // print triangulation to file
-    mesh.printTriag("triangles.txt");
+    mesh.printTriag("./output/triangles.txt");
     
     // search for this point
     MeshPoint p(1, -1);
@@ -100,7 +100,7 @@ int main() {
     
     // print search path to file
     FILE * hist;
-    hist = fopen("search.txt", "w");
+    hist = fopen("./output/search.txt", "w");
     for(int i=0; i<tout.size(); i++){
         fprintf(hist, "%i\n", tout[i]);
     }

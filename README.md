@@ -43,8 +43,8 @@ Example:
         std::cout << t_coords[i].x_ << "," << t_coords[i].y_ << std::endl;
     }
 ```
-Also included is a python file for visualizing the triangulation and search path. Simply
-run:
+Also included (in the output folder) is a python file for visualizing the 
+triangulation and search path. Simply run:
 ``` 
 python show.py
 ```
