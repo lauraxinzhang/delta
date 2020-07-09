@@ -6,28 +6,7 @@
 #include <iostream>
 #include <stdlib.h>
 
-//#include "delaunator.hpp"
 #include "Mesh.hpp"
-//#include "Containers.hpp"
-
-//-----------------------------------------------------------------
-//------------------------- Housekeeping --------------------------
-//-----------------------------------------------------------------
-
-/**
- * \brief Prints how to use the program from command line then exits.
- * \throws ExitException in order to exit the program.
- */
-void usage()
-{
-    std::cerr << "Usage: ./Orbit [-t] [-e] [-g] [-h] [-dat] [-part] [-stat]" << std::endl
-                  << "See documentation or use [-h] option for details :)" <<  std::endl << "Exiting now." << std::endl;
-    try {
-        throw ExitException(0);
-    } catch (ExitException& e) {
-        std::cout << e.what() << std::endl;
-    }
-}
 
 //-------------- vector utilities -----------------------------
 std::vector<double> randArray(double min, double max, int num)
@@ -74,86 +53,58 @@ std::vector<double> meshgrid(std::vector<double>& rr, std::vector<double>& zz)
     return out;
 }
 
-// remove this method for public release. for SOLFI only.
-//std::vector<double> read_limiter(std::string& filename)
-//{
-//    std::ifstream input;
-//    input.open(filename);
-//    std::vector<double> rtn;
-//
-//    if (!input.is_open()){
-//        std::cerr << "cannot open file" << std::endl;
-////        return rtn;
-//    } else {
-//        double in;
-//        while (input >> in){
-//            rtn.push_back(in);
-//        }
-//    }
-//    input.close();
-//    return rtn;
-//}
-
 int main() {
 
     /* x0, y0, x1, y1, ... */
-     std::vector<double> coords = {-1, 1, 1, 1, 1, -1, -1, -1, 0, 0, -1, 0};
-    
-    // std::vector<double> rr = linspace(0, 3, 20);
-    // std::vector<double> zz = linspace(0, 4, 25);
+//--------- option 1: a small test grid
+    std::vector<double> coords = {-1, 1, 1, 1, 1, -1, -1, -1, 0, 0, -1, 0};
 
+    
+//--------- option 2: a mesh grid (uncomment to test)
+    
+//    std::vector<double> rr = linspace(0, 3, 20);
+//    std::vector<double> zz = linspace(0, 4, 25);
+//
 //    std::vector<double> rr = randArray(0, 3, 2000);
 //    std::vector<double> zz = randArray(0, 4, 1000);
 //
-//    // std::vector<double> coords = meshgrid(rr, zz);
-//
+//    std::vector<double> coords = meshgrid(rr, zz);
+
+//--------- option 3: random points (uncomment to test)
 //    std::vector<double> coords = randArray(0, 4, 2000);
-//    std::string fname("limit_flat.txt");
-//    std::vector<double> coords = read_limiter(fname);
 
 
-    //triangulation happens here
-    delaunator::Delaunator d(coords);
+//    //triangulation happens here
+//    delaunator::Delaunator d(coords);
 
-    FILE * pFile;
-    pFile = fopen ("triangles.txt","w");
-    for(std::size_t i = 0; i < d.triangles.size(); i+=3) {
-        fprintf(pFile,
-            // "[[%f, %f], [%f, %f], [%f, %f]]\n",
-            "%f, %f\n %f, %f\n %f, %f\n",
-            d.coords[2 * d.triangles[i]],        //tx0
-            d.coords[2 * d.triangles[i] + 1],    //ty0
-            d.coords[2 * d.triangles[i + 1]],    //tx1
-            d.coords[2 * d.triangles[i + 1] + 1],//ty1
-            d.coords[2 * d.triangles[i + 2]],    //tx2
-            d.coords[2 * d.triangles[i + 2] + 1] //ty2
-        );
-    }
-    fclose(pFile);
-    
-    
-    
-    VecDoub val = {0, 1, 2, 3, 4, 5};
+    VecDoub val = {0, 1, 2, 3, 4, 5}; // to use with the small test grid option #1
     Mesh mesh(coords, val);
-    std::cout <<"size: " << mesh.size() << std::endl;
+    std::cout <<"size of mesh: " << mesh.size() << std::endl;
     
+    // print triangulation to file
+    mesh.printTriag("triangles.txt");
     
-    MeshPoint p(1, -2);
-    size_t start = 1;
+    // search for this point
+    MeshPoint p(1, -1);
+    // initial guess triangle for search
+    size_t start = 0;
     std::vector<size_t> tout = mesh.search(p, start);
 
+    // tout now contains the full search path
     std::vector<MeshPoint> t_coords = mesh.coordsOfTriag(tout.back());
+    // print the vertices of the triangle the search point is in
     std::cout << "Found in triangle " << tout.back() << std::endl;
     for (int i=0; i< t_coords.size(); i++){
         std::cout << t_coords[i].x_ << "," << t_coords[i].y_ << std::endl;
     }
     
+    // print search path to file
     FILE * hist;
     hist = fopen("search.txt", "w");
     for(int i=0; i<tout.size(); i++){
         fprintf(hist, "%i\n", tout[i]);
     }
     fclose(hist);
-    
-//    usage();
+
+    std::cout << "Thanks for using! Bye!" << std::endl;
 }

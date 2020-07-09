@@ -1,0 +1,101 @@
+\hypertarget{class_mat_doub}{}\doxysection{Mat\+Doub Class Reference}
+\label{class_mat_doub}\index{MatDoub@{MatDoub}}
+
+
+Data container class for 2D arrays.  
+
+
+
+
+{\ttfamily \#include $<$Containers.\+hpp$>$}
+
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{class_mat_doub_a26415f6501f86aed242a734a3f27ea98}{Mat\+Doub}} (int nw, int nh, double a=0)
+\begin{DoxyCompactList}\small\item\em Constructs a nw x nh array, filled with value a. \end{DoxyCompactList}\item 
+double \& \mbox{\hyperlink{class_mat_doub_a4ef622df449333ab73e6e7fe4ad63185}{at}} (int w, int h)
+\begin{DoxyCompactList}\small\item\em Element access. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_mat_doub_ae10afebb417d4ae9276dcc2a83f04f41}\label{class_mat_doub_ae10afebb417d4ae9276dcc2a83f04f41}} 
+std\+::vector$<$ double $>$ \& \mbox{\hyperlink{class_mat_doub_ae10afebb417d4ae9276dcc2a83f04f41}{get\+Col}} (int w)
+\begin{DoxyCompactList}\small\item\em Get an editable reference to a certain column. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_mat_doub_a70403f32886ce1d6ef9348983b489394}\label{class_mat_doub_a70403f32886ce1d6ef9348983b489394}} 
+int \mbox{\hyperlink{class_mat_doub_a70403f32886ce1d6ef9348983b489394}{getW}} ()
+\begin{DoxyCompactList}\small\item\em get number of elements in a row \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_mat_doub_a6fa8e1bd511ff12661e3c26ffdae6e07}\label{class_mat_doub_a6fa8e1bd511ff12661e3c26ffdae6e07}} 
+int \mbox{\hyperlink{class_mat_doub_a6fa8e1bd511ff12661e3c26ffdae6e07}{getH}} ()
+\begin{DoxyCompactList}\small\item\em get number of elements in a col \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Data container class for 2D arrays. 
+
+Definition at line 20 of file Containers.\+hpp.
+
+
+
+\doxysubsection{Constructor \& Destructor Documentation}
+\mbox{\Hypertarget{class_mat_doub_a26415f6501f86aed242a734a3f27ea98}\label{class_mat_doub_a26415f6501f86aed242a734a3f27ea98}} 
+\index{MatDoub@{MatDoub}!MatDoub@{MatDoub}}
+\index{MatDoub@{MatDoub}!MatDoub@{MatDoub}}
+\doxysubsubsection{\texorpdfstring{MatDoub()}{MatDoub()}}
+{\footnotesize\ttfamily Mat\+Doub\+::\+Mat\+Doub (\begin{DoxyParamCaption}\item[{int}]{nw,  }\item[{int}]{nh,  }\item[{double}]{a = {\ttfamily 0} }\end{DoxyParamCaption})}
+
+
+
+Constructs a nw x nh array, filled with value a. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em nw} & Number of horizontal elements \\
+\hline
+{\em nh} & Number of vertical elements \\
+\hline
+{\em a} & Default to 0. Fill array with constant values. \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 11 of file Containers.\+cpp.
+
+
+
+References Mat\+Doub().
+
+
+
+Referenced by Mat\+Doub().
+
+
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{class_mat_doub_a4ef622df449333ab73e6e7fe4ad63185}\label{class_mat_doub_a4ef622df449333ab73e6e7fe4ad63185}} 
+\index{MatDoub@{MatDoub}!at@{at}}
+\index{at@{at}!MatDoub@{MatDoub}}
+\doxysubsubsection{\texorpdfstring{at()}{at()}}
+{\footnotesize\ttfamily double \& Mat\+Doub\+::at (\begin{DoxyParamCaption}\item[{int}]{w,  }\item[{int}]{h }\end{DoxyParamCaption})}
+
+
+
+Element access. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em w} & Row index \\
+\hline
+{\em h} & Col index \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+An editable reference to matrix element 
+\end{DoxyReturn}
+
+
+Definition at line 23 of file Containers.\+cpp.
+
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+src/Containers.\+hpp\item 
+src/Containers.\+cpp\end{DoxyCompactItemize}

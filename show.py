@@ -13,13 +13,9 @@ from matplotlib.collections import PatchCollection
 
 print('hello world')
 triang = np.loadtxt('triangles.txt', delimiter=',')
-#print(triang)
 triang = np.reshape(triang, (-1, 3, 2))
-#print(triang)
 
 search = np.loadtxt('search.txt')
-# print(search)
-
 
 fig, ax = plt.subplots()
 col = []
@@ -42,13 +38,9 @@ collection2 = PatchCollection(hist, edgecolor = 'k', facecolor = 'green')
 
 
 ax.add_collection(collection)
-# ax.add_collection(collection2)
-# plt.scatter([0.5], [0])
-
-
 ax.autoscale_view()
-# ax.set_ylim([0, 4]);
-# ax.set_xlim([0, 4]);
-# plt.savefig('path.pdf')
+plt.savefig('triangles.pdf')
+ax.add_collection(collection2)
+plt.savefig('path.pdf')
 plt.show()
 

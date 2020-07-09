@@ -9,11 +9,12 @@
 #define mesh_h
 
 #include "delaunator.hpp"
-#include "Containers.hpp"
 #include <cmath>
 #include <exception>
+#include <fstream>
+#include <stdio.h>
 
-
+typedef std::vector<double> VecDoub;
 struct MeshPoint
 {
     double x_;
@@ -192,6 +193,8 @@ public:
      *\details Search for which triangle the point is in, then find the barycentric coordinate of the point. The interpolated value is then sum(lambda_i * val_i).
      */
     double interp(MeshPoint p, size_t init);
+    
+    void printTriag(const char* fname);
     
 private:
     delaunator::Delaunator d_;

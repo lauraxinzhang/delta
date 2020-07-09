@@ -5,7 +5,6 @@
 //  Copyright © 2020 Xin Zhang. All rights reserved.
 //
 
-#include <stdio.h>
 #include "Mesh.hpp"
 
 LineSeg::LineSeg(MeshPoint& pa, MeshPoint& pb)
@@ -293,4 +292,23 @@ double Mesh::interp(MeshPoint p, size_t init)
         out += bary[i] * val_[points[i]];
     }
     return out;
+}
+
+void Mesh::printTriag(const char* fname){
+    // print triangulation to file
+    FILE * pFile;
+    pFile = fopen (fname,"w");
+    for(std::size_t i = 0; i < d_.triangles.size(); i+=3) {
+        fprintf(pFile,
+            // "[[%f, %f], [%f, %f], [%f, %f]]\n",
+            "%f, %f\n %f, %f\n %f, %f\n",
+            d_.coords[2 * d_.triangles[i]],        //tx0
+            d_.coords[2 * d_.triangles[i] + 1],    //ty0
+            d_.coords[2 * d_.triangles[i + 1]],    //tx1
+            d_.coords[2 * d_.triangles[i + 1] + 1],//ty1
+            d_.coords[2 * d_.triangles[i + 2]],    //tx2
+            d_.coords[2 * d_.triangles[i + 2] + 1] //ty2
+        );
+    }
+    fclose(pFile);
 }
