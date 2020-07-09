@@ -75,7 +75,7 @@ std::vector<double> read_limiter(std::string& filename)
 
 int main() {
     /* x0, y0, x1, y1, ... */
-//     std::vector<double> coords = {-1, 1, 1, 1, 1, -1, -1, -1, 0, 0, -1, 0};
+     std::vector<double> coords = {-1, 1, 1, 1, 1, -1, -1, -1, 0, 0, -1, 0};
     
     // std::vector<double> rr = linspace(0, 3, 20);
     // std::vector<double> zz = linspace(0, 4, 25);
@@ -85,7 +85,7 @@ int main() {
 //
 //    // std::vector<double> coords = meshgrid(rr, zz);
 //
-    std::vector<double> coords = randArray(0, 4, 2000);
+//    std::vector<double> coords = randArray(0, 4, 2000);
 //    std::string fname("limit_flat.txt");
 //    std::vector<double> coords = read_limiter(fname);
 
