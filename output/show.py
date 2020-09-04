@@ -27,7 +27,7 @@ for i in range(triang.shape[0]):
 
 hist = []    
 for j in range(search.shape[0]):
-    index = np.floor(search[j]/3);
+    index = int(np.floor(search[j]/3));
     triag = triang[index, :, :]
     poly = patches.Polygon(triag)
     hist.append(poly)
