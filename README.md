@@ -1,5 +1,6 @@
 # delta
-https://zenodo.org/badge/278388974.svg
+[![DOI](https://zenodo.org/badge/278388974.svg)](https://zenodo.org/badge/latestdoi/278388974)
+
 Triangles, triangles.....
 
 A meshing and searching program in C++. 
